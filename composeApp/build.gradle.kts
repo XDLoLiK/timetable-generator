@@ -76,6 +76,7 @@ kotlin {
             implementation(libs.ktor.serialization.json)
             implementation(libs.arrow.core)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kermit)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)

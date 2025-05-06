@@ -1,4 +1,4 @@
-package org.mipt.timetable.ui
+package org.mipt.timetable
 
 object Route {
     const val HOME = "Home"

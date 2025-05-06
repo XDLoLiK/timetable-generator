@@ -1,4 +1,4 @@
-package org.mipt.timetable.data
+package org.mipt.timetable.data.model
 
 import kotlinx.serialization.Serializable
 
