@@ -1,28 +1,39 @@
 package org.mipt.timetable.presentation.screens
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import org.mipt.timetable.LocalNavController
 import org.mipt.timetable.Route
 
 @Composable
-fun HomeScreen() {
+fun HomeScreenRoot() {
     val navController = LocalNavController.current
 
-    Scaffold {
+    HomeScreen(
+        onNavigate = { navController.navigate(it) }
+    )
+}
+
+@Composable
+private fun HomeScreen(
+    onNavigate: (String) -> Unit = {},
+) {
+    Scaffold(
+        floatingActionButton = {
+            IconButton(onClick = { onNavigate(Route.SETTINGS) }) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings"
+                )
+            }
+        }
+    ) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -36,13 +47,13 @@ fun HomeScreen() {
                 modifier = Modifier.height(32.dp)
             )
             Button(
-                onClick = { navController.navigate(Route.INPUT) },
+                onClick = { onNavigate(Route.INPUT) },
                 modifier = Modifier.width(100.dp),
             ) {
                 Text("Input")
             }
             Button(
-                onClick = { navController.navigate(Route.EXPORT) },
+                onClick = { onNavigate(Route.EXPORT) },
                 modifier = Modifier.width(100.dp)
             ) {
                 Text("Export")

@@ -9,7 +9,6 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.mipt.timetable.AppLogger
 import org.mipt.timetable.data.model.ArrangedClass
@@ -23,7 +22,7 @@ sealed class ClassRequestStatus {
 }
 
 class TimetableService(
-    val baseUrl: String = ""
+    private var baseUrl: String = ""
 ) {
     private val httpClient = HttpClient(CIO) {
         install(ContentNegotiation) {
@@ -35,6 +34,10 @@ class TimetableService(
                 }
             )
         }
+    }
+
+    fun setUrl(url: String) {
+        baseUrl = url
     }
 
     suspend fun sendJson(params: PackedParameters): HttpResponse {
