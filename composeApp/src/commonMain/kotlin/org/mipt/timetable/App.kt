@@ -12,6 +12,7 @@ import co.touchlab.kermit.Logger
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.mipt.timetable.bloc.group.GroupViewModel
 import org.mipt.timetable.bloc.room.RoomViewModel
+import org.mipt.timetable.bloc.solver.SolverViewModel
 import org.mipt.timetable.bloc.teacher.TeacherViewModel
 import org.mipt.timetable.bloc.timetable.TimetableViewModel
 import org.mipt.timetable.presentation.screens.ExportScreen
@@ -29,6 +30,7 @@ val LocalTeacherViewModel = staticCompositionLocalOf<TeacherViewModel> { error("
 val LocalTimetableViewModel = staticCompositionLocalOf<TimetableViewModel> {
     error("TimetableViewModel is not provided")
 }
+val LocalSolverViewModel = staticCompositionLocalOf<SolverViewModel> { error("SolverViewModel is not provided") }
 
 @Composable
 @Preview
@@ -38,6 +40,7 @@ fun App() {
     val groupViewModel = GroupViewModel()
     val teacherViewModel = TeacherViewModel()
     val timetableViewModel = TimetableViewModel()
+    val solverViewModel = SolverViewModel()
 
     CompositionLocalProvider(
         LocalNavController provides navController,
@@ -45,6 +48,7 @@ fun App() {
         LocalGroupViewModel provides groupViewModel,
         LocalTeacherViewModel provides teacherViewModel,
         LocalTimetableViewModel provides timetableViewModel,
+        LocalSolverViewModel provides solverViewModel,
     ) {
         MaterialTheme {
             NavHost(
