@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.mipt.timetable.LocalGroupViewModel
 import org.mipt.timetable.LocalNavController
 import org.mipt.timetable.LocalRoomViewModel
@@ -53,6 +54,7 @@ private fun ExportScreen(
     var fileName by remember { mutableStateOf("Timetable.xlsx") }
     var isExporting by remember { mutableStateOf(false) }
     var exportSuccess by remember { mutableStateOf(false) }
+    var exportFile by remember { mutableStateOf("") }
 
     val serverUrl = when (settingsState) {
         is SettingsState.Saved -> settingsState.settings.serverUrl
@@ -90,6 +92,17 @@ private fun ExportScreen(
                         "Export to Excel",
                         style = MaterialTheme.typography.h3
                     )
+
+                    val launcher = rememberFilePickerLauncher { file ->
+                        exportFile = file.toString()
+                    }
+                    Button(
+                        onClick = { launcher.launch() },
+                        enabled = !isExporting,
+                        modifier = Modifier.padding(start = 8.dp),
+                    ) {
+                        Text("Choose File")
+                    }
 
                     OutlinedTextField(
                         value = filePath,
