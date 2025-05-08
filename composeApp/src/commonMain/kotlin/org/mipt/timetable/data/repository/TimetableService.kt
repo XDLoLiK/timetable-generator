@@ -14,6 +14,8 @@ import kotlinx.serialization.json.Json
 import org.mipt.timetable.AppLogger
 import org.mipt.timetable.data.model.ArrangedClass
 import org.mipt.timetable.data.model.PackedParameters
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 sealed class ClassRequestStatus {
     data class Ready(val classData: ArrangedClass) : ClassRequestStatus()
@@ -37,46 +39,20 @@ class TimetableService(
         }
     }
 
-    suspend fun sendJson(params: PackedParameters): HttpResponse {
+    suspend fun submitProblem(params: PackedParameters): HttpResponse {
         return httpClient.post("${baseUrl}/solve") {
             contentType(ContentType.Application.Json)
             setBody(params)
         }
     }
 
-    suspend fun requestNextClass(): ClassRequestStatus = coroutineScope {
-        val response = async {
-            httpClient.get(baseUrl) {
-                header("Get-Next-Class", "true")
-            }
-        }.await()
+    @OptIn(ExperimentalUuidApi::class)
+    suspend fun checkStatus(id: Uuid): HttpResponse {
+        return httpClient.get("${baseUrl}/${id}/status")
+    }
 
-        if (response.status != HttpStatusCode.OK) {
-            return@coroutineScope ClassRequestStatus.Error(
-                "Server returned ${response.status} status code"
-            )
-        }
-
-        if (response.headers["Reached-End"] == "true") {
-            return@coroutineScope ClassRequestStatus.ReachedEnd()
-        }
-
-        if (response.headers["Next-Class-Ready"] == "false") {
-            return@coroutineScope ClassRequestStatus.InProgress()
-        }
-
-        val body = async {
-            response.bodyAsText()
-        }.await()
-        try {
-            val classData = Json.decodeFromString<ArrangedClass>(body)
-            ClassRequestStatus.Ready(classData)
-        } catch (e: IllegalArgumentException) {
-            AppLogger.logger.w(
-                "Failed to parse json: $body",
-                throwable = e
-            )
-            ClassRequestStatus.Error("Invalid server response format")
-        }
+    @OptIn(ExperimentalUuidApi::class)
+    suspend fun getSolution(id: Uuid): HttpResponse {
+        return httpClient.get("${baseUrl}/${id}")
     }
 }

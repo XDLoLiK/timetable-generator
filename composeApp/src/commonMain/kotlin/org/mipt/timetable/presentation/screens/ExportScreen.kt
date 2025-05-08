@@ -10,6 +10,8 @@ import org.mipt.timetable.*
 import org.mipt.timetable.bloc.solver.SolverEvent
 import org.mipt.timetable.bloc.solver.SolverState
 import org.mipt.timetable.data.model.PackedParameters
+import org.mipt.timetable.presentation.widgets.TimerWidget
+import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -100,12 +102,23 @@ fun ExportScreen() {
                         )
                     }
                 }
+
                 is SolverState.Solving -> {
-                    CircularProgressIndicator(Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Exporting...")
-                    Text("Your uuid is ${(solverState as SolverState.Solving).uuid.toString()}")
+                    val id = (solverState as SolverState.Solving).uuid
+
+                    TimerWidget(delay = 2.seconds, onTick = { solverViewModel.onEvent(SolverEvent.UpdateStatus(id)) }) {
+                        CircularProgressIndicator(Modifier.size(16.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Solving...")
+                        Text("Your uuid is ${id.toString()}")
+                    }
                 }
+
+                is SolverState.Solved -> {
+                    Text("Solved!")
+                    Text("Your solution is ${(solverState as SolverState.Solved).result.toString()}")
+                }
+
                 is SolverState.Error -> {
                     Text("Error code: ${solverState.toString()}")
                 }
