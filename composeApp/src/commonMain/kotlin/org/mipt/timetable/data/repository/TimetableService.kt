@@ -13,6 +13,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import org.mipt.timetable.AppLogger
 import org.mipt.timetable.data.model.ArrangedClass
+import org.mipt.timetable.data.model.PackedParameters
 
 sealed class ClassRequestStatus {
     data class Ready(val classData: ArrangedClass) : ClassRequestStatus()
@@ -36,10 +37,10 @@ class TimetableService(
         }
     }
 
-    suspend fun sendJson(data: Serializable): HttpResponse {
-        return httpClient.post(baseUrl) {
+    suspend fun sendJson(params: PackedParameters): HttpResponse {
+        return httpClient.post("${baseUrl}/solve") {
             contentType(ContentType.Application.Json)
-            setBody(data)
+            setBody(params)
         }
     }
 
