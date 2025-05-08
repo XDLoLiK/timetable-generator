@@ -2,46 +2,90 @@ package org.mipt.timetable.presentation.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.mipt.timetable.*
+import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
+import org.mipt.timetable.LocalGroupViewModel
+import org.mipt.timetable.LocalNavController
+import org.mipt.timetable.LocalRoomViewModel
+import org.mipt.timetable.LocalTeacherViewModel
+import org.mipt.timetable.bloc.settings.SettingsState
+import org.mipt.timetable.bloc.settings.SettingsViewModel
 import org.mipt.timetable.bloc.solver.SolverEvent
 import org.mipt.timetable.bloc.solver.SolverState
+import org.mipt.timetable.bloc.solver.SolverViewModel
 import org.mipt.timetable.data.model.PackedParameters
 import org.mipt.timetable.presentation.widgets.TimerWidget
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 
+@Composable
+fun ExportScreenRoot(
+    solverViewModel: SolverViewModel = SolverViewModel(),
+    settingsViewModel: SettingsViewModel = SettingsViewModel(),
+) {
+    val navController = LocalNavController.current
+    val solverState by solverViewModel.state.collectAsState()
+    val settingsState by settingsViewModel.state.collectAsState()
+
+    ExportScreen(
+        solverState = solverState,
+        settingsState = settingsState,
+        onEvent = solverViewModel::onEvent,
+        onGoBack = { navController.popBackStack() }
+    )
+}
+
 @OptIn(ExperimentalUuidApi::class)
 @Composable
-fun ExportScreen() {
-    val navController = LocalNavController.current
-
+private fun ExportScreen(
+    solverState: SolverState,
+    settingsState: SettingsState,
+    onEvent: (SolverEvent) -> Unit,
+    onGoBack: () -> Unit = {},
+) {
     val roomState by LocalRoomViewModel.current.state.collectAsState()
     val groupState by LocalGroupViewModel.current.state.collectAsState()
     val teacherState by LocalTeacherViewModel.current.state.collectAsState()
 
-    val solverViewModel = LocalSolverViewModel.current
-    val solverState by solverViewModel.state.collectAsState()
-
     var filePath by remember { mutableStateOf("") }
     var fileName by remember { mutableStateOf("Timetable.xlsx") }
-    var isExporting by remember { mutableStateOf(false) }
+    val isExporting by remember { mutableStateOf(false) }
     var exportSuccess by remember { mutableStateOf(false) }
+    var exportFile by remember { mutableStateOf("") }
+
+    val serverUrl = when (settingsState) {
+        is SettingsState.Saved -> settingsState.settings.serverUrl
+        is SettingsState.Unsaved -> settingsState.settings.serverUrl
+    }
+    LaunchedEffect(serverUrl) {
+        onEvent(SolverEvent.SetServerUrl(serverUrl))
+    }
 
     Scaffold(
-        floatingActionButton = {
-            Button(
-                onClick = { navController.popBackStack() },
-            ) {
-                Text("Back to menu")
-            }
+        topBar = {
+            TopAppBar(
+                title = { Text("Export") },
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = contentColorFor(MaterialTheme.colors.primary),
+                elevation = 12.dp,
+                navigationIcon = {
+                    IconButton(onClick = onGoBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back to menu"
+                        )
+                    }
+                }
+            )
         },
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(16.dp),
+            modifier = Modifier.fillMaxSize().padding(32.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             when (solverState) {
@@ -50,6 +94,17 @@ fun ExportScreen() {
                         "Export to Excel",
                         style = MaterialTheme.typography.h3
                     )
+
+                    val launcher = rememberFilePickerLauncher { file ->
+                        exportFile = file.toString()
+                    }
+                    Button(
+                        onClick = { launcher.launch() },
+                        enabled = !isExporting,
+                        modifier = Modifier.padding(start = 8.dp),
+                    ) {
+                        Text("Choose File")
+                    }
 
                     OutlinedTextField(
                         value = filePath,
@@ -66,18 +121,17 @@ fun ExportScreen() {
                     )
 
                     Button(
-                        onClick =
-                            {
-                                solverViewModel.onEvent(
-                                    SolverEvent.SubmitProblem(
-                                        PackedParameters(
-                                            roomState.rooms.values.toList(),
-                                            teacherState.teachers.values.toList(),
-                                            groupState.groups.values.toList()
-                                        )
+                        onClick = {
+                            onEvent(
+                                SolverEvent.SubmitProblem(
+                                    PackedParameters(
+                                        roomState.rooms.values.toList(),
+                                        teacherState.teachers.values.toList(),
+                                        groupState.groups.values.toList()
                                     )
                                 )
-                            },
+                            )
+                        },
                         enabled = filePath.isNotBlank() && !isExporting,
                         modifier = Modifier.align(Alignment.End)
                     ) {
@@ -93,7 +147,7 @@ fun ExportScreen() {
                                 Button(
                                     onClick = {
                                         exportSuccess = false
-                                        navController.popBackStack()
+                                        onGoBack()
                                     }
                                 ) {
                                     Text("Ok")
@@ -104,9 +158,9 @@ fun ExportScreen() {
                 }
 
                 is SolverState.Solving -> {
-                    val id = (solverState as SolverState.Solving).uuid
+                    val id = solverState.uuid
 
-                    TimerWidget(delay = 2.seconds, onTick = { solverViewModel.onEvent(SolverEvent.UpdateStatus(id)) }) {
+                    TimerWidget(delay = 2.seconds, onTick = { onEvent(SolverEvent.UpdateStatus(id)) }) {
                         CircularProgressIndicator(Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Solving...")
@@ -116,7 +170,7 @@ fun ExportScreen() {
 
                 is SolverState.Solved -> {
                     Text("Solved!")
-                    Text("Your solution is ${(solverState as SolverState.Solved).result.toString()}")
+                    Text("Your solution is ${solverState.result.toString()}")
                 }
 
                 is SolverState.Error -> {

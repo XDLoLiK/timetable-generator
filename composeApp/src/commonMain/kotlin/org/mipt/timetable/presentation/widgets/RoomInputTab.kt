@@ -3,6 +3,7 @@ package org.mipt.timetable.presentation.widgets
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -46,7 +47,7 @@ private fun RoomInputTab(
         ) {
             Text(
                 "Rooms",
-                style = MaterialTheme.typography.h5
+                style = MaterialTheme.typography.h6
             )
             IconButton(
                 onClick = {
@@ -64,12 +65,20 @@ private fun RoomInputTab(
             modifier = Modifier.height(16.dp)
         )
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+            modifier = Modifier.padding(bottom = 16.dp)
+        ) {
             items(state.rooms.toList()) {
                 RoomItem(
                     id = it.first,
                     room = it.second,
                     onEvent
+                )
+            }
+            item {
+                Spacer(
+                    modifier = Modifier.height(16.dp)
                 )
             }
         }
@@ -83,7 +92,11 @@ private fun RoomItem(
     room: Room,
     onEvent: (RoomEvent) -> Unit,
 ) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        shape = MaterialTheme.shapes.medium.copy(all = CornerSize(16.dp)),
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -159,10 +172,6 @@ private fun RoomItem(
                     }
                 }
             }
-
-            Spacer(
-                modifier = Modifier.height(32.dp)
-            )
         }
     }
 }

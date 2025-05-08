@@ -3,8 +3,11 @@ package org.mipt.timetable.presentation.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import org.mipt.timetable.LocalGroupViewModel
 import org.mipt.timetable.LocalNavController
 import org.mipt.timetable.LocalRoomViewModel
@@ -20,24 +23,46 @@ private object InputTab {
 }
 
 @Composable
-fun InputScreen() {
-    var activeTab by remember { mutableStateOf(0) }
+fun InputScreenRoot() {
     val navController = LocalNavController.current
-    val roomViewModel = LocalRoomViewModel.current
-    val groupViewModel = LocalGroupViewModel.current
-    val teacherViewModel = LocalTeacherViewModel.current
+
+    InputScreen(
+        onGoBack = { navController.popBackStack() }
+    )
+}
+
+@Composable
+private fun InputScreen(
+    onGoBack: () -> Unit = {},
+) {
+    var activeTab by remember { mutableStateOf(0) }
 
     Scaffold(
-        floatingActionButton = {
-            Button(
-                onClick = { navController.popBackStack() },
-            ) {
-                Text("Back to menu")
-            }
+        topBar = {
+            TopAppBar(
+                title = { Text("Input") },
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = contentColorFor(MaterialTheme.colors.primary),
+                elevation = 12.dp,
+                navigationIcon = {
+                    IconButton(onClick = onGoBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back to menu"
+                        )
+                    }
+                }
+            )
         },
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            TabRow(selectedTabIndex = activeTab) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            TabRow(
+                selectedTabIndex = activeTab,
+                backgroundColor = MaterialTheme.colors.surface,
+                contentColor = contentColorFor(MaterialTheme.colors.surface),
+            ) {
                 Tab(
                     selected = activeTab == InputTab.ROOMS,
                     onClick = { activeTab = InputTab.ROOMS },
@@ -59,9 +84,9 @@ fun InputScreen() {
             }
 
             when (activeTab) {
-                0 -> RoomInputTabRoot(viewModel = roomViewModel)
-                1 -> GroupInputTabRoot(viewModel = groupViewModel)
-                2 -> TeacherInputTabRoot(viewModel = teacherViewModel)
+                0 -> RoomInputTabRoot(viewModel = LocalRoomViewModel.current)
+                1 -> GroupInputTabRoot(viewModel = LocalGroupViewModel.current)
+                2 -> TeacherInputTabRoot(viewModel = LocalTeacherViewModel.current)
             }
         }
     }

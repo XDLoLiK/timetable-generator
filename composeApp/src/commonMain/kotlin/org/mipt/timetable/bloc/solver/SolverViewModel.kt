@@ -14,22 +14,24 @@ import org.mipt.timetable.data.repository.TimetableService
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class SolverViewModel : ViewModel() {
-    private val _state = MutableStateFlow<SolverState>(SolverState.Idle())
     private val _service: TimetableService = TimetableService("http://0.0.0.0:8080")
+    private val _state = MutableStateFlow<SolverState>(SolverState.Idle())
     val state = _state.asStateFlow()
 
     fun onEvent(event: SolverEvent) {
         when (event) {
             is SolverEvent.SubmitProblem -> onSubmitProblem(event)
             is SolverEvent.UpdateStatus -> onUpdateStatus(event)
+            is SolverEvent.SetServerUrl -> onSetServerUrl(event)
         }
     }
 
     @OptIn(ExperimentalUuidApi::class)
     private fun onSubmitProblem(event: SolverEvent.SubmitProblem) {
         viewModelScope.launch {
-            val response = _service.submitProblem(event.params);
+            val response = _service.submitProblem(event.params)
 
             _state.update {
                 if (response.status.isSuccess()) {
@@ -48,7 +50,7 @@ class SolverViewModel : ViewModel() {
             val statusResponse = _service.checkStatus(id)
 
             if (statusResponse.status.isSuccess()) {
-                val status = statusResponse.body<SolverStatus>();
+                val status = statusResponse.body<SolverStatus>()
 
                 when (status) {
                     SolverStatus.NOT_SOLVING -> {
@@ -71,5 +73,9 @@ class SolverViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    private fun onSetServerUrl(event: SolverEvent.SetServerUrl) {
+        _service.setUrl(event.url)
     }
 }

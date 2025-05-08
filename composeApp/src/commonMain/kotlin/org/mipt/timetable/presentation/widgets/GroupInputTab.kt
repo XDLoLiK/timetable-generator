@@ -3,22 +3,12 @@ package org.mipt.timetable.presentation.widgets
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Button
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.mipt.timetable.bloc.group.GroupEvent
@@ -71,12 +61,20 @@ private fun GroupInputTab(
             modifier = Modifier.height(16.dp)
         )
 
-        LazyColumn(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(32.dp),
+            modifier = Modifier.padding(bottom = 16.dp)
+        ) {
             items(state.groups.toList()) {
                 GroupItem(
                     id = it.first,
                     group = it.second,
                     onEvent
+                )
+            }
+            item {
+                Spacer(
+                    modifier = Modifier.height(16.dp)
                 )
             }
         }
@@ -93,7 +91,11 @@ private fun GroupItem(
     var className by remember { mutableStateOf("") }
     var classHours by remember { mutableStateOf("") }
 
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = 4.dp,
+        shape = MaterialTheme.shapes.medium.copy(all = CornerSize(16.dp)),
+    ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -183,10 +185,6 @@ private fun GroupItem(
                     }
                 }
             }
-
-            Spacer(
-                modifier = Modifier.height(32.dp)
-            )
         }
     }
 }

@@ -8,4 +8,5 @@ sealed class SolverEvent {
     data class SubmitProblem(val params: PackedParameters) : SolverEvent()
     @OptIn(ExperimentalUuidApi::class)
     data class UpdateStatus(val id: Uuid) : SolverEvent()
+    data class SetServerUrl(val url: String) : SolverEvent()
 }
