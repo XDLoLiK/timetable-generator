@@ -11,15 +11,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.mipt.timetable.LocalNavController
+import org.mipt.timetable.LocalSettingsViewMoel
 import org.mipt.timetable.bloc.settings.SettingsEvent
 import org.mipt.timetable.bloc.settings.SettingsState
-import org.mipt.timetable.bloc.settings.SettingsViewModel
 
 @Composable
-fun SettingsScreenRoot(
-    viewModel: SettingsViewModel = SettingsViewModel(),
-) {
+fun SettingsScreenRoot() {
     val navController = LocalNavController.current
+    val viewModel = LocalSettingsViewMoel.current
     val state by viewModel.state.collectAsState()
 
     SettingsScreen(

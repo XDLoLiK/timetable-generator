@@ -63,13 +63,8 @@ fun App() {
             ) {
                 composable(Route.HOME) { HomeScreenRoot() }
                 composable(Route.INPUT) { InputScreenRoot() }
-                composable(Route.EXPORT) {
-                    ExportScreenRoot(
-                        solverViewModel = solverViewModel,
-                        settingsViewModel = settingsViewModel,
-                    )
-                }
-                composable(Route.SETTINGS) { SettingsScreenRoot(settingsViewModel) }
+                composable(Route.EXPORT) { ExportScreenRoot() }
+                composable(Route.SETTINGS) { SettingsScreenRoot() }
             }
         }
     }

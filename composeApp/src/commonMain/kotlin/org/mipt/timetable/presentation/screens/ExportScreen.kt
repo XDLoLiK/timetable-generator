@@ -9,26 +9,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
-import org.mipt.timetable.LocalGroupViewModel
-import org.mipt.timetable.LocalNavController
-import org.mipt.timetable.LocalRoomViewModel
-import org.mipt.timetable.LocalTeacherViewModel
+import org.mipt.timetable.*
 import org.mipt.timetable.bloc.settings.SettingsState
-import org.mipt.timetable.bloc.settings.SettingsViewModel
 import org.mipt.timetable.bloc.solver.SolverEvent
 import org.mipt.timetable.bloc.solver.SolverState
-import org.mipt.timetable.bloc.solver.SolverViewModel
 import org.mipt.timetable.data.model.PackedParameters
 import org.mipt.timetable.presentation.widgets.TimerWidget
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 
 @Composable
-fun ExportScreenRoot(
-    solverViewModel: SolverViewModel = SolverViewModel(),
-    settingsViewModel: SettingsViewModel = SettingsViewModel(),
-) {
+fun ExportScreenRoot() {
     val navController = LocalNavController.current
+    val solverViewModel = LocalSolverViewModel.current
+    val settingsViewModel = LocalSettingsViewMoel.current
     val solverState by solverViewModel.state.collectAsState()
     val settingsState by settingsViewModel.state.collectAsState()
 
@@ -164,17 +158,17 @@ private fun ExportScreen(
                         CircularProgressIndicator(Modifier.size(16.dp))
                         Spacer(modifier = Modifier.width(8.dp))
                         Text("Solving...")
-                        Text("Your uuid is ${id.toString()}")
+                        Text("Your uuid is $id")
                     }
                 }
 
                 is SolverState.Solved -> {
                     Text("Solved!")
-                    Text("Your solution is ${solverState.result.toString()}")
+                    Text("Your solution is ${solverState.result}")
                 }
 
                 is SolverState.Error -> {
-                    Text("Error code: ${solverState.toString()}")
+                    Text("Error code: $solverState")
                 }
             }
         }
