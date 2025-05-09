@@ -8,7 +8,7 @@ data class Teacher(
     val classHours: Map<String, Int> = mapOf(),
     val groupWhitelist: Set<String> = setOf("All"),
     val timeslots: Map<WeekDay, List<Boolean>> = WeekDay.entries.associateWith {
-        List(8) {
+        List(7) {
             false
         }
     },

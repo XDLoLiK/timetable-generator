@@ -9,4 +9,5 @@ sealed class SolverEvent {
     data class SubmitProblem(val params: PackedParameters) : SolverEvent()
     data class UpdateStatus(val id: Uuid) : SolverEvent()
     data class SetServerUrl(val url: String) : SolverEvent()
+    data class SetError(val error: String) : SolverEvent()
 }

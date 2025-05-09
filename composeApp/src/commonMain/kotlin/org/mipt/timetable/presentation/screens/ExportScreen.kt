@@ -5,7 +5,6 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
@@ -15,6 +14,7 @@ import org.mipt.timetable.bloc.solver.SolverEvent
 import org.mipt.timetable.bloc.solver.SolverState
 import org.mipt.timetable.data.model.PackedParameters
 import org.mipt.timetable.presentation.widgets.PeriodicTimer
+import org.mipt.timetable.util.exportExcel
 import kotlin.time.Duration.Companion.seconds
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -46,8 +46,6 @@ private fun ExportScreenImpl(
     val groupState by LocalGroupViewModel.current.state.collectAsState()
     val teacherState by LocalTeacherViewModel.current.state.collectAsState()
 
-    var filePath by remember { mutableStateOf("") }
-    var fileName by remember { mutableStateOf("Timetable.xlsx") }
     var isExporting by remember { mutableStateOf(false) }
     var exportSuccess by remember { mutableStateOf(false) }
     var exportFile by remember { mutableStateOf("") }
@@ -67,7 +65,7 @@ private fun ExportScreenImpl(
                 title = { Text("Export") },
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = contentColorFor(MaterialTheme.colors.primary),
-                elevation = 12.dp,
+                elevation = 8.dp,
                 navigationIcon = {
                     IconButton(onClick = onGoBack) {
                         Icon(
@@ -85,34 +83,42 @@ private fun ExportScreenImpl(
         ) {
             when (state) {
                 is SolverState.Idle -> {
-                    Text(
-                        "Export to Excel",
-                        style = MaterialTheme.typography.h3
-                    )
-
-                    val launcher = rememberFilePickerLauncher { file ->
-                        exportFile = file.toString()
-                    }
                     Button(
-                        onClick = { launcher.launch() },
-                        enabled = !isExporting,
-                        modifier = Modifier.padding(start = 8.dp),
+                        onClick = {
+                            onEvent(
+                                SolverEvent.SubmitProblem(
+                                    PackedParameters(
+                                        roomState.rooms.values.toList(),
+                                        teacherState.teachers.values.toList(),
+                                        groupState.groups.values.toList()
+                                    )
+                                )
+                            )
+                        },
                     ) {
-                        Text("Choose File")
+                        Text("Generate")
                     }
+                }
 
-                    OutlinedTextField(
-                        value = filePath,
-                        onValueChange = { filePath = it },
-                        label = { Text("Save to folder") },
-                        modifier = Modifier.fillMaxWidth()
+                is SolverState.Solving -> {
+                    PeriodicTimer(
+                        interval = 2.seconds,
+                        onTick = { onEvent(SolverEvent.UpdateStatus(state.uuid)) }
+                    ) {
+                        CircularProgressIndicator(Modifier.size(32.dp))
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Generating timetable...")
+                        Text("Job id is ${state.uuid}")
+                    }
+                }
+
+                is SolverState.Solved -> {
+                    Text(
+                        "Timetable ready: ${state.result}"
                     )
 
-                    OutlinedTextField(
-                        value = fileName,
-                        onValueChange = { fileName = it },
-                        label = { Text("File name") },
-                        modifier = Modifier.fillMaxWidth()
+                    Spacer(
+                        modifier = Modifier.width(8.dp)
                     )
 
                     Button(
@@ -126,9 +132,28 @@ private fun ExportScreenImpl(
                                     )
                                 )
                             )
-                        },
-                        enabled = filePath.isNotBlank() && !isExporting,
-                        modifier = Modifier.align(Alignment.End)
+                        }
+                    ) {
+                        Text("Regenerate")
+                    }
+
+                    val launcher = rememberFilePickerLauncher { file ->
+                        exportFile = file.toString()
+                        try {
+                            exportExcel(exportFile, state.result)
+                        } catch (e: Exception) {
+                            onEvent(SolverEvent.SetError(e.toString()))
+                        }
+                        isExporting = false
+                        exportSuccess = true
+                    }
+
+                    Button(
+                        enabled = !isExporting,
+                        onClick = {
+                            isExporting = true
+                            launcher.launch()
+                        }
                     ) {
                         Text("Export")
                     }
@@ -137,12 +162,11 @@ private fun ExportScreenImpl(
                         AlertDialog(
                             onDismissRequest = { exportSuccess = false },
                             title = { Text("Export Successful") },
-                            text = { Text("File saved to: $filePath/$fileName") },
+                            text = { Text("File saved to: $exportFile") },
                             confirmButton = {
                                 Button(
                                     onClick = {
                                         exportSuccess = false
-                                        onGoBack()
                                     }
                                 ) {
                                     Text("Ok")
@@ -152,24 +176,30 @@ private fun ExportScreenImpl(
                     }
                 }
 
-                is SolverState.Solving -> {
-                    PeriodicTimer(
-                        interval = 2.seconds,
-                        onTick = { onEvent(SolverEvent.UpdateStatus(state.uuid)) }
-                    ) {
-                        CircularProgressIndicator(Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text("Creating the timetable...")
-                        Text("Job id is $state.uuid")
-                    }
-                }
-
-                is SolverState.Solved -> {
-                    Text("Timetable ready: $state.result")
-                }
-
                 is SolverState.Error -> {
-                    Text("Error occurred: $state")
+                    Text(
+                        "Error occurred: ${state.message}",
+                    )
+
+                    Spacer(
+                        modifier = Modifier.width(8.dp)
+                    )
+
+                    Button(
+                        onClick = {
+                            onEvent(
+                                SolverEvent.SubmitProblem(
+                                    PackedParameters(
+                                        roomState.rooms.values.toList(),
+                                        teacherState.teachers.values.toList(),
+                                        groupState.groups.values.toList()
+                                    )
+                                )
+                            )
+                        }
+                    ) {
+                        Text("Retry")
+                    }
                 }
             }
         }

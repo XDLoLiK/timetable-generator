@@ -93,7 +93,7 @@ private fun GroupItem(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = 8.dp,
         shape = MaterialTheme.shapes.medium.copy(all = CornerSize(16.dp)),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {

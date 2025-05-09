@@ -59,6 +59,8 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.apache.poi)
+            implementation(libs.excelkt)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -80,10 +82,15 @@ kotlin {
             implementation(libs.filekit.core)
             implementation(libs.filekit.dialogs)
             implementation(libs.filekit.dialogs.compose)
+            implementation(libs.slf4j.api)
+            implementation(libs.log4j.core)
+            implementation(libs.log4j.api)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
+            implementation(libs.apache.poi)
+            implementation(libs.excelkt)
         }
     }
 }

@@ -96,7 +96,7 @@ private fun TeacherItem(
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = 8.dp,
         shape = MaterialTheme.shapes.medium.copy(all = CornerSize(16.dp)),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -106,7 +106,14 @@ private fun TeacherItem(
             ) {
                 OutlinedTextField(
                     value = teacher.name,
-                    onValueChange = { onEvent(TeacherEvent.UpdateName(teacherId = id, name = it)) },
+                    onValueChange = {
+                        onEvent(
+                            TeacherEvent.UpdateName(
+                                teacherId = id,
+                                name = it
+                            )
+                        )
+                    },
                     label = { Text("Teacher Name") },
                     modifier = Modifier.weight(1f)
                 )
@@ -139,7 +146,7 @@ private fun TeacherItem(
                         modifier = Modifier.width(100.dp)
                     )
                     Row {
-                        repeat(8) { slot ->
+                        repeat(7) { slot ->
                             Checkbox(
                                 checked = teacher.timeslots[day]?.get(slot) ?: false,
                                 modifier = Modifier.padding(horizontal = 2.dp),
@@ -202,7 +209,12 @@ private fun TeacherItem(
                 Button(
                     onClick = {
                         if (className.isNotBlank() && classHours.toIntOrNull() != null) {
-                            onEvent(TeacherEvent.AddClass(teacherId = id, className to classHours.toInt()))
+                            onEvent(
+                                TeacherEvent.AddClass(
+                                    teacherId = id,
+                                    className to classHours.toInt()
+                                )
+                            )
                             className = ""
                             classHours = ""
                         }
@@ -283,8 +295,15 @@ private fun TeacherItem(
                     ) {
                         Text(groupName)
                         IconButton(
-                            onClick = { onEvent(TeacherEvent.RemoveGroupFromWhitelist(teacherId = id, groupName)) },
-                            modifier = Modifier.size(24.dp)
+                            onClick = {
+                                onEvent(
+                                    TeacherEvent.RemoveGroupFromWhitelist(
+                                        teacherId = id,
+                                        groupName
+                                    )
+                                )
+                            },
+                            modifier = Modifier.size(24.dp),
                         ) {
                             Icon(
                                 Icons.Default.Delete,

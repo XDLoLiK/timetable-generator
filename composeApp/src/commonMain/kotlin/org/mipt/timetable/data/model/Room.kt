@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class Room(
     val name: String = "",
     val timeslots: Map<WeekDay, List<Boolean>> = WeekDay.entries.associateWith {
-        List(8) {
+        List(7) {
             false
         }
     },
