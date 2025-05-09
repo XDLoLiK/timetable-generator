@@ -16,7 +16,6 @@ import org.mipt.timetable.bloc.room.RoomViewModel
 import org.mipt.timetable.bloc.settings.SettingsViewModel
 import org.mipt.timetable.bloc.solver.SolverViewModel
 import org.mipt.timetable.bloc.teacher.TeacherViewModel
-import org.mipt.timetable.bloc.timetable.TimetableViewModel
 import org.mipt.timetable.presentation.screens.ExportScreen
 import org.mipt.timetable.presentation.screens.HomeScreen
 import org.mipt.timetable.presentation.screens.InputScreen
@@ -30,9 +29,6 @@ val LocalNavController = staticCompositionLocalOf<NavHostController> { error("Na
 val LocalRoomViewModel = staticCompositionLocalOf<RoomViewModel> { error("RoomViewModel is not provided") }
 val LocalGroupViewModel = staticCompositionLocalOf<GroupViewModel> { error("GroupViewModel is not provided") }
 val LocalTeacherViewModel = staticCompositionLocalOf<TeacherViewModel> { error("TeacherViewModel is not provided") }
-val LocalTimetableViewModel = staticCompositionLocalOf<TimetableViewModel> {
-    error("TimetableViewModel is not provided")
-}
 val LocalSolverViewModel = staticCompositionLocalOf<SolverViewModel> { error("SolverViewModel is not provided") }
 val LocalSettingsViewMoel = staticCompositionLocalOf<SettingsViewModel> { error("SettingsViewModel is not provided") }
 
@@ -43,7 +39,6 @@ fun App() {
     val roomViewModel = remember { RoomViewModel() }
     val groupViewModel = remember { GroupViewModel() }
     val teacherViewModel = remember { TeacherViewModel() }
-    val timetableViewModel = remember { TimetableViewModel() }
     val solverViewModel = remember { SolverViewModel() }
     val settingsViewModel = remember { SettingsViewModel() }
 
@@ -52,7 +47,6 @@ fun App() {
         LocalRoomViewModel provides roomViewModel,
         LocalGroupViewModel provides groupViewModel,
         LocalTeacherViewModel provides teacherViewModel,
-        LocalTimetableViewModel provides timetableViewModel,
         LocalSolverViewModel provides solverViewModel,
         LocalSettingsViewMoel provides settingsViewModel,
     ) {

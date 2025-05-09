@@ -94,7 +94,7 @@ private fun RoomItem(
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
+        elevation = 8.dp,
         shape = MaterialTheme.shapes.medium.copy(all = CornerSize(16.dp)),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -140,7 +140,7 @@ private fun RoomItem(
                         modifier = Modifier.width(100.dp)
                     )
                     Row {
-                        repeat(8) { slot ->
+                        repeat(7) { slot ->
                             Checkbox(
                                 modifier = Modifier.padding(horizontal = 2.dp),
                                 checked = room.timeslots[day]?.get(slot) ?: false,

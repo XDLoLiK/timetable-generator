@@ -24,6 +24,7 @@ class SolverViewModel : ViewModel() {
             is SolverEvent.SubmitProblem -> onSubmitProblem(event)
             is SolverEvent.UpdateStatus -> onUpdateStatus(event)
             is SolverEvent.SetServerUrl -> onSetServerUrl(event)
+            is SolverEvent.SetError -> onSetError(event)
         }
     }
 
@@ -35,7 +36,7 @@ class SolverViewModel : ViewModel() {
                 if (response.status.isSuccess()) {
                     SolverState.Solving(Uuid.parse(response.body<String>()))
                 } else {
-                    SolverState.Error(response.status)
+                    SolverState.Error(response.status.toString())
                 }
             }
         }
@@ -57,7 +58,7 @@ class SolverViewModel : ViewModel() {
                             if (resultResponse.status.isSuccess()) {
                                 SolverState.Solved(resultResponse.body())
                             } else {
-                                SolverState.Error(resultResponse.status)
+                                SolverState.Error(resultResponse.status.toString())
                             }
                         }
                     }
@@ -66,7 +67,7 @@ class SolverViewModel : ViewModel() {
                 }
             } else {
                 _state.update {
-                    SolverState.Error(statusResponse.status)
+                    SolverState.Error(statusResponse.status.toString())
                 }
             }
         }
@@ -74,5 +75,11 @@ class SolverViewModel : ViewModel() {
 
     private fun onSetServerUrl(event: SolverEvent.SetServerUrl) {
         _service.setUrl(event.url)
+    }
+
+    private fun onSetError(event: SolverEvent.SetError) {
+        _state.update {
+            SolverState.Error(event.error)
+        }
     }
 }

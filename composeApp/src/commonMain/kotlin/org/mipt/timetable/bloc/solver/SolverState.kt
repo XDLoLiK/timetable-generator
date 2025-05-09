@@ -10,5 +10,5 @@ sealed class SolverState() {
     class Idle() : SolverState()
     data class Solving(val uuid: Uuid) : SolverState()
     data class Solved(val result: List<ArrangedClass>) : SolverState()
-    data class Error(val response: HttpStatusCode) : SolverState()
+    data class Error(val message: String) : SolverState()
 }

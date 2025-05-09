@@ -20,6 +20,10 @@ ktor = "3.1.3"
 arrow = "2.1.1"
 kermit = "2.0.5"
 filekit = "0.10.0-beta03"
+poi = "5.4.1"
+excelkt = "1.0.2"
+slf4j = "2.0.17"
+log4j = "2.24.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -46,6 +50,11 @@ kermit = { module = "co.touchlab:kermit", version.ref = "kermit" }
 filekit-core = { module = "io.github.vinceglb:filekit-core", version.ref = "filekit" }
 filekit-dialogs = { module = "io.github.vinceglb:filekit-dialogs", version.ref = "filekit" }
 filekit-dialogs-compose = { module = "io.github.vinceglb:filekit-dialogs-compose", version.ref = "filekit" }
+apache-poi = { module = "org.apache.poi:poi", version.ref = "poi" }
+excelkt = { module = "io.github.evanrupert:excelkt", version.ref = "excelkt" }
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+log4j-api = { module = "org.apache.logging.log4j:log4j-api", version.ref = "log4j" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

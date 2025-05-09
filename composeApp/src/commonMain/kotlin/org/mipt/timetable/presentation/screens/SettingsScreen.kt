@@ -40,7 +40,7 @@ private fun SettingsScreenImpl(
                 title = { Text("Settings") },
                 backgroundColor = MaterialTheme.colors.primary,
                 contentColor = contentColorFor(MaterialTheme.colors.primary),
-                elevation = 12.dp,
+                elevation = 8.dp,
                 navigationIcon = {
                     IconButton(onClick = onGoBack) {
                         Icon(
