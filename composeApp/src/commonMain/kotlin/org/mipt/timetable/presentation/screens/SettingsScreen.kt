@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,15 +11,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.mipt.timetable.LocalNavController
 import org.mipt.timetable.LocalSettingsViewMoel
-import org.mipt.timetable.bloc.room.RoomEvent
 import org.mipt.timetable.bloc.settings.SettingsEvent
 import org.mipt.timetable.bloc.settings.SettingsState
-import org.mipt.timetable.bloc.solver.SolverEvent
-import org.mipt.timetable.util.exportExcel
 
 @Composable
 fun SettingsScreen() {

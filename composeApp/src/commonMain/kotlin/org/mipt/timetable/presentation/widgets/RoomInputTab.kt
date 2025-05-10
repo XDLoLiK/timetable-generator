@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.mipt.timetable.AppLogger
-import org.mipt.timetable.bloc.group.GroupEvent
 import org.mipt.timetable.bloc.room.RoomEvent
 import org.mipt.timetable.bloc.room.RoomState
 import org.mipt.timetable.bloc.room.RoomViewModel

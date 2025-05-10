@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mipt.timetable.Database
 import org.mipt.timetable.bloc.settings.SettingsState
-import org.mipt.timetable.data.repository.TimetableService
 import org.mipt.timetable.util.createDatabase
 import org.mipt.timetable.util.getGroups
 import org.mipt.timetable.util.syncGroups

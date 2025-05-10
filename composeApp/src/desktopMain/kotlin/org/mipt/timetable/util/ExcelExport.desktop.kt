@@ -34,7 +34,7 @@ actual fun exportExcel(
                 (0..6).forEach { classNum ->
                     row {
                         if (classNum == 0) {
-                            cell("$day.name")
+                            cell("${day.name}")
                         } else {
                             cell("")
                         }

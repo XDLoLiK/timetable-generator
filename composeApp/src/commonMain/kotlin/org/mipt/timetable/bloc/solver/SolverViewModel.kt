@@ -1,7 +1,5 @@
 package org.mipt.timetable.bloc.solver
 
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.ktor.client.call.*
@@ -12,7 +10,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mipt.timetable.bloc.settings.SettingsState
-import org.mipt.timetable.bloc.settings.SettingsViewModel
 import org.mipt.timetable.data.model.SolverStatus
 import org.mipt.timetable.data.repository.TimetableService
 import kotlin.uuid.ExperimentalUuidApi

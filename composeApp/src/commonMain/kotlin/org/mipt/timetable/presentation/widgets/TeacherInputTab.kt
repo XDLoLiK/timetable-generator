@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.mipt.timetable.AppLogger
-import org.mipt.timetable.bloc.group.GroupEvent
 import org.mipt.timetable.bloc.teacher.TeacherEvent
 import org.mipt.timetable.bloc.teacher.TeacherState
 import org.mipt.timetable.bloc.teacher.TeacherViewModel
@@ -224,7 +223,7 @@ private fun TeacherItem(
             )
 
             Column {
-                teacher.classHours.forEach { className ->
+                teacher.classes.forEach { className ->
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                         horizontalArrangement = Arrangement.SpaceBetween

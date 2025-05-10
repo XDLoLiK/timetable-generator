@@ -18,5 +18,6 @@ sealed class TeacherEvent {
         val roomId: Uuid,
         val timeslots: Map<WeekDay, List<Boolean>>
     ) : TeacherEvent()
+
     class ClearTeachers : TeacherEvent()
 }
