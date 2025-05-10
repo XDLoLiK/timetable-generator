@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class ArrangedClass(
     val day: WeekDay,
     val group: String,
+    val subject: String,
     val classNumber: Int,
     val teacher: String,
     val room: String,

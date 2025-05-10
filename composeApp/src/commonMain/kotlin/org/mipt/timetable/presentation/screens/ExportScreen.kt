@@ -50,14 +50,6 @@ private fun ExportScreenImpl(
     var exportSuccess by remember { mutableStateOf(false) }
     var exportFile by remember { mutableStateOf("") }
 
-    val serverUrl = when (settings) {
-        is SettingsState.Saved -> settings.settings.serverUrl
-        is SettingsState.Unsaved -> settings.settings.serverUrl
-    }
-
-    LaunchedEffect(serverUrl) {
-        onEvent(SolverEvent.SetServerUrl(serverUrl))
-    }
 
     Scaffold(
         topBar = {

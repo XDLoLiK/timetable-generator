@@ -38,7 +38,6 @@ class SolverViewModel(private val settingsFlow: StateFlow<SettingsState>) : View
         when (event) {
             is SolverEvent.SubmitProblem -> onSubmitProblem(event)
             is SolverEvent.UpdateStatus -> onUpdateStatus(event)
-            is SolverEvent.SetServerUrl -> onSetServerUrl(event)
             is SolverEvent.SetError -> onSetError(event)
         }
     }
@@ -88,9 +87,6 @@ class SolverViewModel(private val settingsFlow: StateFlow<SettingsState>) : View
         }
     }
 
-    private fun onSetServerUrl(event: SolverEvent.SetServerUrl) {
-        _service!!.setUrl(event.url)
-    }
 
     private fun onSetError(event: SolverEvent.SetError) {
         _state.update {

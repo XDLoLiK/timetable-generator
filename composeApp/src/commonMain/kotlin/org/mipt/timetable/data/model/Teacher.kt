@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Teacher(
     val name: String = "",
-    val classHours: Map<String, Int> = mapOf(),
-    val groupWhitelist: Set<String> = setOf("All"),
+    val classHours: Set<String> = setOf(),
+    val groupWhitelist: Set<String> = setOf(),
     val timeslots: Map<WeekDay, List<Boolean>> = WeekDay.entries.associateWith {
         List(7) {
             false

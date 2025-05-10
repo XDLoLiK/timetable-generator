@@ -97,8 +97,8 @@ class TeacherViewModel(private val settingsFlow: StateFlow<SettingsState>)  : Vi
                 teachers = it.teachers.toMutableMap().apply {
                     val teacher = get(event.teacherId)
                     if (teacher != null) {
-                        put(event.teacherId, teacher.copy(classHours = teacher.classHours.toMutableMap().apply {
-                            put(event.classData.first, event.classData.second)
+                        put(event.teacherId, teacher.copy(classHours = teacher.classHours.toMutableSet().apply {
+                            add(event.className)
                         }))
                     }
                 }
@@ -112,7 +112,7 @@ class TeacherViewModel(private val settingsFlow: StateFlow<SettingsState>)  : Vi
                 teachers = it.teachers.toMutableMap().apply {
                     val teacher = get(event.teacherId)
                     if (teacher != null) {
-                        put(event.teacherId, teacher.copy(classHours = teacher.classHours.toMutableMap().apply {
+                        put(event.teacherId, teacher.copy(classHours = teacher.classHours.toMutableSet().apply {
                             remove(event.className)
                         }))
                     }

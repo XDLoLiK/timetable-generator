@@ -94,7 +94,6 @@ private fun TeacherItem(
     onEvent: (TeacherEvent) -> Unit,
 ) {
     var className by remember { mutableStateOf("") }
-    var classHours by remember { mutableStateOf("") }
     var whitelistedGroup by remember { mutableStateOf("") }
 
     Card(
@@ -202,24 +201,16 @@ private fun TeacherItem(
                     modifier = Modifier.weight(1f)
                 )
 
-                OutlinedTextField(
-                    value = classHours,
-                    onValueChange = { classHours = it },
-                    label = { Text("Hours") },
-                    modifier = Modifier.width(100.dp)
-                )
-
                 Button(
                     onClick = {
-                        if (className.isNotBlank() && classHours.toIntOrNull() != null) {
+                        if (className.isNotBlank()) {
                             onEvent(
                                 TeacherEvent.AddClass(
                                     teacherId = id,
-                                    className to classHours.toInt()
+                                    className
                                 )
                             )
                             className = ""
-                            classHours = ""
                         }
                     },
                     modifier = Modifier.padding(start = 8.dp)
@@ -233,13 +224,12 @@ private fun TeacherItem(
             )
 
             Column {
-                teacher.classHours.forEach { (className, hours) ->
+                teacher.classHours.forEach { className ->
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(className)
-                        Text("$hours hours")
                         IconButton(
                             onClick = { onEvent(TeacherEvent.RemoveClass(teacherId = id, className)) },
                             modifier = Modifier.size(24.dp)

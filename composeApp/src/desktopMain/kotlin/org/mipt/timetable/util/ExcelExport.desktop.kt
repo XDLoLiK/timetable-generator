@@ -47,7 +47,7 @@ actual fun exportExcel(
                                 classInSlot?.let {
                                     "${it.teacher}\n" +
                                             "${it.room}\n" +
-                                            "Class = ?"
+                                            "${it.subject}"
                                 } ?: ""
                             )
                         }
