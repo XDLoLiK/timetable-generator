@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -91,6 +92,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.apache.poi)
             implementation(libs.excelkt)
+            implementation(libs.sqldelight.jvm)
         }
     }
 }
@@ -136,4 +138,12 @@ compose.desktop {
             packageVersion = "1.0.0"
         }
     }
+}
+
+sqldelight {
+  databases {
+    create("Database") {
+      packageName.set("org.mipt.timetable")
+    }
+  }
 }

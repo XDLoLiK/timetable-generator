@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.mipt.timetable.AppLogger
+import org.mipt.timetable.bloc.group.GroupEvent
 import org.mipt.timetable.bloc.room.RoomEvent
 import org.mipt.timetable.bloc.room.RoomState
 import org.mipt.timetable.bloc.room.RoomViewModel
@@ -24,7 +25,7 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun RoomInputTab(
-    viewModel: RoomViewModel = RoomViewModel(),
+    viewModel: RoomViewModel,
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -47,7 +48,8 @@ private fun RoomInputTabImpl(
         ) {
             Text(
                 "Rooms",
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.weight(0.8f)
             )
             IconButton(
                 onClick = {
@@ -59,6 +61,7 @@ private fun RoomInputTabImpl(
                     contentDescription = "Add room"
                 )
             }
+            ClearButtonWithConfirmation { onEvent(RoomEvent.ClearRooms()) }
         }
 
         Spacer(

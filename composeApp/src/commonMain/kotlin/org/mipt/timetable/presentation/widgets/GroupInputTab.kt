@@ -43,7 +43,8 @@ private fun GroupInputTabImpl(
         ) {
             Text(
                 "Groups",
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.weight(0.8f)
             )
             IconButton(
                 onClick = {
@@ -55,6 +56,7 @@ private fun GroupInputTabImpl(
                     contentDescription = "Add group"
                 )
             }
+            ClearButtonWithConfirmation { onEvent(GroupEvent.ClearGroups()) }
         }
 
         Spacer(

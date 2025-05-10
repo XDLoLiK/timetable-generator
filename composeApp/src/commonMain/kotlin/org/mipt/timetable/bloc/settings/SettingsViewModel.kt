@@ -15,6 +15,7 @@ class SettingsViewModel : ViewModel() {
             is SettingsEvent.Reset -> onReloadSettings(event)
             is SettingsEvent.Save -> onSaveSettings(event)
             is SettingsEvent.UpdateServerUrl -> onUpdateServerUrl(event)
+            is SettingsEvent.UpdateDBPath -> onUpdateDBPath(event)
             is SettingsEvent.DiscardChanges -> onDiscardChanges(event)
         }
     }
@@ -43,6 +44,19 @@ class SettingsViewModel : ViewModel() {
                 )
 
                 is SettingsState.Unsaved -> current.copy(changed = current.changed.copy(serverUrl = event.url))
+            }
+        }
+    }
+
+    private fun onUpdateDBPath(event: SettingsEvent.UpdateDBPath) {
+        _state.update { current ->
+            when (current) {
+                is SettingsState.Saved -> SettingsState.Unsaved(
+                    settings = current.settings,
+                    changed = current.settings.copy(dbDir = event.path)
+                )
+
+                is SettingsState.Unsaved -> current.copy(changed = current.changed.copy(dbDir = event.path))
             }
         }
     }

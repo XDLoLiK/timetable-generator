@@ -1,15 +1,34 @@
 package org.mipt.timetable.bloc.teacher
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.mipt.timetable.Database
+import org.mipt.timetable.bloc.room.RoomState
+import org.mipt.timetable.bloc.settings.SettingsState
+import org.mipt.timetable.util.*
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
-class TeacherViewModel : ViewModel() {
+class TeacherViewModel(private val settingsFlow: StateFlow<SettingsState>)  : ViewModel() {
+    private var _db: Database? = null
     private val _state = MutableStateFlow(TeacherState())
     val state = _state.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            settingsFlow.collect {
+                if (it is SettingsState.Saved) {
+                    _db = createDatabase(it.settings.dbDir)
+                    _state.update { TeacherState(_db!!.getTeachers()) }
+                }
+            }
+        }
+    }
 
     fun onEvent(event: TeacherEvent) {
         when (event) {
@@ -21,7 +40,9 @@ class TeacherViewModel : ViewModel() {
             is TeacherEvent.RemoveClass -> onRemoveClass(event)
             is TeacherEvent.AddGroupToWhitelist -> onAddGroupToWhitelist(event)
             is TeacherEvent.RemoveGroupFromWhitelist -> onRemoveGroupFromWhitelist(event)
+            is TeacherEvent.ClearTeachers -> onClearTeachers(event)
         }
+        _db?.syncTeachers(_state.value.teachers)
     }
 
     private fun onAddTeacher(event: TeacherEvent.AddTeacher) {
@@ -128,5 +149,9 @@ class TeacherViewModel : ViewModel() {
                 }
             )
         }
+    }
+
+    private fun onClearTeachers(event: TeacherEvent.ClearTeachers) {
+        _state.update { TeacherState() }
     }
 }

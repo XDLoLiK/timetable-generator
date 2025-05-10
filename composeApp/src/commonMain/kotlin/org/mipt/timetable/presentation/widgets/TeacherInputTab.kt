@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.mipt.timetable.AppLogger
+import org.mipt.timetable.bloc.group.GroupEvent
 import org.mipt.timetable.bloc.teacher.TeacherEvent
 import org.mipt.timetable.bloc.teacher.TeacherState
 import org.mipt.timetable.bloc.teacher.TeacherViewModel
@@ -22,7 +23,7 @@ import kotlin.uuid.Uuid
 
 @Composable
 fun TeacherInputTab(
-    viewModel: TeacherViewModel = TeacherViewModel(),
+    viewModel: TeacherViewModel,
 ) {
     val state by viewModel.state.collectAsState()
 
@@ -45,7 +46,8 @@ private fun TeacherInputTabImpl(
         ) {
             Text(
                 "Teachers",
-                style = MaterialTheme.typography.h6
+                style = MaterialTheme.typography.h6,
+                modifier = Modifier.weight(0.8f)
             )
             IconButton(
                 onClick = {
@@ -57,6 +59,7 @@ private fun TeacherInputTabImpl(
                     contentDescription = "Add teacher"
                 )
             }
+            ClearButtonWithConfirmation { onEvent(TeacherEvent.ClearTeachers()) }
         }
 
         Spacer(

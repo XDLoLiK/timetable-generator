@@ -1,15 +1,36 @@
 package org.mipt.timetable.bloc.group
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.mipt.timetable.Database
+import org.mipt.timetable.bloc.settings.SettingsState
+import org.mipt.timetable.data.repository.TimetableService
+import org.mipt.timetable.util.createDatabase
+import org.mipt.timetable.util.getGroups
+import org.mipt.timetable.util.syncGroups
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
-class GroupViewModel : ViewModel() {
+class GroupViewModel(private val settingsFlow: StateFlow<SettingsState>) : ViewModel() {
+    private var _db: Database? = null
     private val _state = MutableStateFlow(GroupState())
     val state = _state.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            settingsFlow.collect {
+                if (it is SettingsState.Saved) {
+                    _db = createDatabase(it.settings.dbDir)
+                    _state.update { GroupState(_db!!.getGroups()) }
+                }
+            }
+        }
+    }
 
     fun onEvent(event: GroupEvent) {
         when (event) {
@@ -18,7 +39,9 @@ class GroupViewModel : ViewModel() {
             is GroupEvent.UpdateName -> onUpdateName(event)
             is GroupEvent.AddClass -> onAddClass(event)
             is GroupEvent.RemoveClass -> onRemoveClass(event)
+            is GroupEvent.ClearGroups -> onClearGroups(event)
         }
+        _db?.syncGroups(_state.value.groups)
     }
 
     private fun onAddGroup(event: GroupEvent.AddGroup) {
@@ -82,5 +105,9 @@ class GroupViewModel : ViewModel() {
                 }
             )
         }
+    }
+
+    private fun onClearGroups(event: GroupEvent.ClearGroups) {
+        _state.update { GroupState() }
     }
 }

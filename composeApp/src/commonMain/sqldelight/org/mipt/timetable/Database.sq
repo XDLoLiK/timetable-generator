@@ -1,0 +1,47 @@
+CREATE TABLE IF NOT EXISTS groups (
+    id TEXT PRIMARY KEY NOT NULL,
+    data TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS rooms (
+    id TEXT PRIMARY KEY NOT NULL,
+    data TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS teachers (
+    id TEXT PRIMARY KEY NOT NULL,
+    data TEXT NOT NULL
+);
+
+allGroups:
+SELECT *
+FROM groups;
+
+allRooms:
+SELECT *
+FROM rooms;
+
+allTeachers:
+SELECT *
+FROM teachers;
+
+insertGroup:
+INSERT OR REPLACE INTO groups(id, data)
+VALUES (?, ?);
+
+insertRoom:
+INSERT OR REPLACE INTO rooms(id, data)
+VALUES (?, ?);
+
+insertTeacher:
+INSERT OR REPLACE INTO teachers(id, data)
+VALUES (?, ?);
+
+deleteGroup:
+DELETE FROM groups WHERE id = ?;
+
+deleteRoom:
+DELETE FROM rooms WHERE id = ?;
+
+deleteTeacher:
+DELETE FROM teachers WHERE id = ?;

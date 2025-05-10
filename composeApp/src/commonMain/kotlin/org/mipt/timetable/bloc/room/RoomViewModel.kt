@@ -1,15 +1,34 @@
 package org.mipt.timetable.bloc.room
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import org.mipt.timetable.Database
+import org.mipt.timetable.bloc.group.GroupState
+import org.mipt.timetable.bloc.settings.SettingsState
+import org.mipt.timetable.util.*
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
-class RoomViewModel : ViewModel() {
+class RoomViewModel(private val settingsFlow: StateFlow<SettingsState>)   : ViewModel() {
+    private var _db: Database? = null
     private val _state = MutableStateFlow(RoomState())
     val state = _state.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            settingsFlow.collect {
+                if (it is SettingsState.Saved) {
+                    _db = createDatabase(it.settings.dbDir)
+                    _state.update { RoomState(_db!!.getRooms()) }
+                }
+            }
+        }
+    }
 
     fun onEvent(event: RoomEvent) {
         when (event) {
@@ -17,7 +36,9 @@ class RoomViewModel : ViewModel() {
             is RoomEvent.RemoveRoom -> onRemoveRoom(event)
             is RoomEvent.UpdateName -> onUpdateName(event)
             is RoomEvent.UpdateTimeslots -> onUpdateTimeslots(event)
+            is RoomEvent.ClearRooms -> onClearRooms(event)
         }
+        _db?.syncRooms(_state.value.rooms)
     }
 
     private fun onAddRoom(event: RoomEvent.AddRoom) {
@@ -64,5 +85,9 @@ class RoomViewModel : ViewModel() {
                 }
             )
         }
+    }
+
+    private fun onClearRooms(event: RoomEvent.ClearRooms) {
+        _state.update { RoomState() }
     }
 }

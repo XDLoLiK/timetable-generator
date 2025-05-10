@@ -35,12 +35,14 @@ val LocalSettingsViewMoel = staticCompositionLocalOf<SettingsViewModel> { error(
 @Composable
 @Preview
 fun App() {
-    val navController = rememberNavController()
-    val roomViewModel = remember { RoomViewModel() }
-    val groupViewModel = remember { GroupViewModel() }
-    val teacherViewModel = remember { TeacherViewModel() }
-    val solverViewModel = remember { SolverViewModel() }
     val settingsViewModel = remember { SettingsViewModel() }
+    val settingsFlow = settingsViewModel.state
+
+    val navController = rememberNavController()
+    val roomViewModel = remember { RoomViewModel(settingsFlow) }
+    val groupViewModel = remember { GroupViewModel(settingsFlow) }
+    val teacherViewModel = remember { TeacherViewModel(settingsFlow) }
+    val solverViewModel = remember { SolverViewModel(settingsFlow) }
 
     CompositionLocalProvider(
         LocalNavController provides navController,
