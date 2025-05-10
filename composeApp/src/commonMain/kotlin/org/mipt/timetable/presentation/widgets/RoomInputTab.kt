@@ -14,7 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.mipt.timetable.AppLogger
-import org.mipt.timetable.bloc.group.GroupEvent
 import org.mipt.timetable.bloc.room.RoomEvent
 import org.mipt.timetable.bloc.room.RoomState
 import org.mipt.timetable.bloc.room.RoomViewModel
@@ -41,7 +40,9 @@ private fun RoomInputTabImpl(
     state: RoomState,
     onEvent: (RoomEvent) -> Unit,
 ) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
@@ -51,9 +52,15 @@ private fun RoomInputTabImpl(
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.weight(0.8f)
             )
+
             IconButton(
                 onClick = {
-                    onEvent(RoomEvent.AddRoom(roomId = Uuid.random(), Room()))
+                    onEvent(
+                        RoomEvent.AddRoom(
+                            roomId = Uuid.random(),
+                            Room()
+                        )
+                    )
                 }
             ) {
                 Icon(
@@ -61,7 +68,10 @@ private fun RoomInputTabImpl(
                     contentDescription = "Add room"
                 )
             }
-            ClearButtonWithConfirmation { onEvent(RoomEvent.ClearRooms()) }
+
+            ClearButtonWithConfirmation {
+                onEvent(RoomEvent.ClearRooms())
+            }
         }
 
         Spacer(
@@ -100,7 +110,9 @@ private fun RoomItem(
         elevation = 8.dp,
         shape = MaterialTheme.shapes.medium.copy(all = CornerSize(16.dp)),
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -118,6 +130,7 @@ private fun RoomItem(
                     label = { Text("Room Name") },
                     modifier = Modifier.weight(1f)
                 )
+
                 IconButton(
                     onClick = {
                         onEvent(RoomEvent.RemoveRoom(roomId = id))
@@ -137,11 +150,14 @@ private fun RoomItem(
             )
 
             WeekDay.entries.forEach { day ->
-                Row(modifier = Modifier.padding(vertical = 4.dp)) {
+                Row(
+                    modifier = Modifier.padding(vertical = 4.dp)
+                ) {
                     Text(
                         day.name,
                         modifier = Modifier.width(100.dp)
                     )
+
                     Row {
                         repeat(7) { slot ->
                             Checkbox(

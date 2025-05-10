@@ -14,5 +14,6 @@ sealed class RoomEvent {
         val roomId: Uuid,
         val timeslots: Map<WeekDay, List<Boolean>>
     ) : RoomEvent()
+
     class ClearRooms : RoomEvent()
 }

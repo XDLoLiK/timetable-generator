@@ -8,13 +8,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mipt.timetable.Database
-import org.mipt.timetable.bloc.group.GroupState
 import org.mipt.timetable.bloc.settings.SettingsState
 import org.mipt.timetable.util.*
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
-class RoomViewModel(private val settingsFlow: StateFlow<SettingsState>)   : ViewModel() {
+class RoomViewModel(private val settingsFlow: StateFlow<SettingsState>) : ViewModel() {
     private var _db: Database? = null
     private val _state = MutableStateFlow(RoomState())
     val state = _state.asStateFlow()

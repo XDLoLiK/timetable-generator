@@ -36,7 +36,9 @@ private fun GroupInputTabImpl(
     state: GroupState,
     onEvent: (GroupEvent) -> Unit,
 ) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
@@ -46,9 +48,15 @@ private fun GroupInputTabImpl(
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.weight(0.8f)
             )
+
             IconButton(
                 onClick = {
-                    onEvent(GroupEvent.AddGroup(groupId = Uuid.random(), Group()))
+                    onEvent(
+                        GroupEvent.AddGroup(
+                            groupId = Uuid.random(),
+                            Group()
+                        )
+                    )
                 }
             ) {
                 Icon(
@@ -56,7 +64,10 @@ private fun GroupInputTabImpl(
                     contentDescription = "Add group"
                 )
             }
-            ClearButtonWithConfirmation { onEvent(GroupEvent.ClearGroups()) }
+
+            ClearButtonWithConfirmation {
+                onEvent(GroupEvent.ClearGroups())
+            }
         }
 
         Spacer(
@@ -98,14 +109,23 @@ private fun GroupItem(
         elevation = 8.dp,
         shape = MaterialTheme.shapes.medium.copy(all = CornerSize(16.dp)),
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 OutlinedTextField(
                     value = group.name,
-                    onValueChange = { onEvent(GroupEvent.UpdateName(groupId = id, name = it)) },
+                    onValueChange = {
+                        onEvent(
+                            GroupEvent.UpdateName(
+                                groupId = id,
+                                name = it
+                            )
+                        )
+                    },
                     label = { Text("Group Name") },
                     modifier = Modifier.weight(1f)
                 )

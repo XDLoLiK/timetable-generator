@@ -8,17 +8,9 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
-import org.mipt.timetable.data.model.ArrangedClass
 import org.mipt.timetable.data.model.PackedParameters
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
-
-sealed class ClassRequestStatus {
-    data class Ready(val classData: ArrangedClass) : ClassRequestStatus()
-    data class Error(val message: String) : ClassRequestStatus()
-    class InProgress : ClassRequestStatus()
-    class ReachedEnd : ClassRequestStatus()
-}
 
 @OptIn(ExperimentalUuidApi::class)
 class TimetableService(
@@ -34,10 +26,6 @@ class TimetableService(
                 }
             )
         }
-    }
-
-    fun setUrl(url: String) {
-        baseUrl = url
     }
 
     suspend fun submitProblem(params: PackedParameters): HttpResponse {

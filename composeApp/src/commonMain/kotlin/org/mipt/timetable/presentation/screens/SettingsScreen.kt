@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -12,15 +11,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import io.github.vinceglb.filekit.dialogs.FileKitType
 import io.github.vinceglb.filekit.dialogs.compose.rememberFilePickerLauncher
 import org.mipt.timetable.LocalNavController
 import org.mipt.timetable.LocalSettingsViewMoel
-import org.mipt.timetable.bloc.room.RoomEvent
 import org.mipt.timetable.bloc.settings.SettingsEvent
 import org.mipt.timetable.bloc.settings.SettingsState
-import org.mipt.timetable.bloc.solver.SolverEvent
-import org.mipt.timetable.util.exportExcel
 
 @Composable
 fun SettingsScreen() {
@@ -79,6 +74,10 @@ private fun SettingsScreenImpl(
                 modifier = Modifier.fillMaxWidth()
             )
 
+            Spacer(
+                modifier = Modifier.width(8.dp)
+            )
+
             Text(
                 "Database file",
                 style = MaterialTheme.typography.h6,
@@ -113,6 +112,11 @@ private fun SettingsScreenImpl(
                     )
                 }
             }
+
+            Spacer(
+                modifier = Modifier.width(8.dp)
+            )
+
             Row(modifier = Modifier.align(Alignment.End)) {
                 Button(
                     enabled = state is SettingsState.Unsaved,
@@ -120,9 +124,11 @@ private fun SettingsScreenImpl(
                 ) {
                     Text("Save")
                 }
+
                 Spacer(
                     modifier = Modifier.width(16.dp)
                 )
+
                 Button(
                     onClick = {
                         onEvent(SettingsEvent.Reset())

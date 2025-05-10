@@ -1,12 +1,9 @@
 package org.mipt.timetable.presentation.widgets
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 
 @Composable
 fun ClearButtonWithConfirmation(
@@ -15,9 +12,14 @@ fun ClearButtonWithConfirmation(
     var showDialog by remember { mutableStateOf(false) }
 
     IconButton(
-        onClick = { showDialog = true },
+        onClick = {
+            showDialog = true
+        },
     ) {
-        Icon(Icons.Default.Clear, contentDescription = "Clear")
+        Icon(
+            Icons.Default.Clear,
+            contentDescription = "Clear"
+        )
     }
 
     if (showDialog) {
@@ -37,7 +39,9 @@ fun ClearButtonWithConfirmation(
             },
             dismissButton = {
                 Button(
-                    onClick = { showDialog = false }
+                    onClick = {
+                        showDialog = false
+                    }
                 ) {
                     Text("Cancel")
                 }

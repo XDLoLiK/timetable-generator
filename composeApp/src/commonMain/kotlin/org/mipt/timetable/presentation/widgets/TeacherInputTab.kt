@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import org.mipt.timetable.AppLogger
-import org.mipt.timetable.bloc.group.GroupEvent
 import org.mipt.timetable.bloc.teacher.TeacherEvent
 import org.mipt.timetable.bloc.teacher.TeacherState
 import org.mipt.timetable.bloc.teacher.TeacherViewModel
@@ -39,7 +38,9 @@ private fun TeacherInputTabImpl(
     state: TeacherState,
     onEvent: (TeacherEvent) -> Unit,
 ) {
-    Column(modifier = Modifier.padding(16.dp)) {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier.fillMaxWidth()
@@ -49,9 +50,15 @@ private fun TeacherInputTabImpl(
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.weight(0.8f)
             )
+
             IconButton(
                 onClick = {
-                    onEvent(TeacherEvent.AddTeacher(teacherId = Uuid.random(), Teacher()))
+                    onEvent(
+                        TeacherEvent.AddTeacher(
+                            teacherId = Uuid.random(),
+                            Teacher()
+                        )
+                    )
                 }
             ) {
                 Icon(
@@ -59,7 +66,10 @@ private fun TeacherInputTabImpl(
                     contentDescription = "Add teacher"
                 )
             }
-            ClearButtonWithConfirmation { onEvent(TeacherEvent.ClearTeachers()) }
+
+            ClearButtonWithConfirmation {
+                onEvent(TeacherEvent.ClearTeachers())
+            }
         }
 
         Spacer(
@@ -101,7 +111,9 @@ private fun TeacherItem(
         elevation = 8.dp,
         shape = MaterialTheme.shapes.medium.copy(all = CornerSize(16.dp)),
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -142,11 +154,14 @@ private fun TeacherItem(
             )
 
             WeekDay.entries.forEach { day ->
-                Row(modifier = Modifier.padding(vertical = 4.dp)) {
+                Row(
+                    modifier = Modifier.padding(vertical = 4.dp)
+                ) {
                     Text(
                         day.name,
                         modifier = Modifier.width(100.dp)
                     )
+
                     Row {
                         repeat(7) { slot ->
                             Checkbox(
@@ -224,7 +239,7 @@ private fun TeacherItem(
             )
 
             Column {
-                teacher.classHours.forEach { className ->
+                teacher.classes.forEach { className ->
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                         horizontalArrangement = Arrangement.SpaceBetween

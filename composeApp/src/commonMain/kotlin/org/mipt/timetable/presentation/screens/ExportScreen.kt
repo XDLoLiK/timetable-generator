@@ -47,9 +47,8 @@ private fun ExportScreenImpl(
     val teacherState by LocalTeacherViewModel.current.state.collectAsState()
 
     var isExporting by remember { mutableStateOf(false) }
-    var exportSuccess by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
     var exportFile by remember { mutableStateOf("") }
-
 
     Scaffold(
         topBar = {
@@ -137,7 +136,7 @@ private fun ExportScreenImpl(
                             onEvent(SolverEvent.SetError(e.toString()))
                         }
                         isExporting = false
-                        exportSuccess = true
+                        showDialog = true
                     }
 
                     Button(
@@ -150,15 +149,15 @@ private fun ExportScreenImpl(
                         Text("Export")
                     }
 
-                    if (exportSuccess) {
+                    if (showDialog) {
                         AlertDialog(
-                            onDismissRequest = { exportSuccess = false },
+                            onDismissRequest = { showDialog = false },
                             title = { Text("Export Successful") },
                             text = { Text("File saved to: $exportFile") },
                             confirmButton = {
                                 Button(
                                     onClick = {
-                                        exportSuccess = false
+                                        showDialog = false
                                     }
                                 ) {
                                     Text("Ok")

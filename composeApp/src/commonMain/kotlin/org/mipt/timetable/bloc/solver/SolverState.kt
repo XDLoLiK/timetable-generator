@@ -1,6 +1,5 @@
 package org.mipt.timetable.bloc.solver
 
-import io.ktor.http.*
 import org.mipt.timetable.data.model.ArrangedClass
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

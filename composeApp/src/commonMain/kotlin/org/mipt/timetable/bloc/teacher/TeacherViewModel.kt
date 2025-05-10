@@ -8,13 +8,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.mipt.timetable.Database
-import org.mipt.timetable.bloc.room.RoomState
 import org.mipt.timetable.bloc.settings.SettingsState
 import org.mipt.timetable.util.*
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
-class TeacherViewModel(private val settingsFlow: StateFlow<SettingsState>)  : ViewModel() {
+class TeacherViewModel(private val settingsFlow: StateFlow<SettingsState>) : ViewModel() {
     private var _db: Database? = null
     private val _state = MutableStateFlow(TeacherState())
     val state = _state.asStateFlow()
@@ -97,7 +96,7 @@ class TeacherViewModel(private val settingsFlow: StateFlow<SettingsState>)  : Vi
                 teachers = it.teachers.toMutableMap().apply {
                     val teacher = get(event.teacherId)
                     if (teacher != null) {
-                        put(event.teacherId, teacher.copy(classHours = teacher.classHours.toMutableSet().apply {
+                        put(event.teacherId, teacher.copy(classes = teacher.classes.toMutableSet().apply {
                             add(event.className)
                         }))
                     }
@@ -112,7 +111,7 @@ class TeacherViewModel(private val settingsFlow: StateFlow<SettingsState>)  : Vi
                 teachers = it.teachers.toMutableMap().apply {
                     val teacher = get(event.teacherId)
                     if (teacher != null) {
-                        put(event.teacherId, teacher.copy(classHours = teacher.classHours.toMutableSet().apply {
+                        put(event.teacherId, teacher.copy(classes = teacher.classes.toMutableSet().apply {
                             remove(event.className)
                         }))
                     }

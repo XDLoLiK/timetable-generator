@@ -44,8 +44,7 @@ fun Database.syncGroups(groups: Map<Uuid, Group>) {
 
         if (entry != null) {
             databaseQueries.insertGroup(id.toString(), Json.encodeToString(entry))
-        }
-        else {
+        } else {
             databaseQueries.deleteGroup(id.toString())
         }
     }
@@ -58,8 +57,7 @@ fun Database.syncRooms(rooms: Map<Uuid, Room>) {
 
         if (entry != null) {
             databaseQueries.insertRoom(id.toString(), Json.encodeToString(entry))
-        }
-        else {
+        } else {
             databaseQueries.deleteRoom(id.toString())
         }
     }
@@ -72,8 +70,7 @@ fun Database.syncTeachers(teachers: Map<Uuid, Teacher>) {
 
         if (entry != null) {
             databaseQueries.insertTeacher(id.toString(), Json.encodeToString(entry))
-        }
-        else {
+        } else {
             databaseQueries.deleteTeacher(id.toString())
         }
     }
